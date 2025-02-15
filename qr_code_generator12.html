@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator and Sign In</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #74ebd5, #ACB6E5);
+            padding: 50px;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        h1 {
+            font-size: 36px;
+            color: #333;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+        h1:hover {
+            transform: scale(1.2);
+            color: #007bff;
+        }
+        p {
+            font-size: 20px;
+            color: #fff;
+        }
+        input {
+            padding: 15px;
+            width: 300px;
+            font-size: 18px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: block;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #qrcode {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: transparent;
+            box-shadow: none;
+        }
+        .sign-in-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .sign-in-button:hover {
+            background-color: #e64a19;
+        }
+        .sign-in-page, .qr-generator-page {
+            display: none;
+        }
+        .submitted-message {
+            display: none;
+            font-size: 32px;
+            color: #28a745;
+            margin-top: 20px;
+        }
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            font-size: 18px;
+            color: #fff;
+        }
+        .footer strong {
+            font-size: 20px;
+            text-transform: uppercase;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+    <div class="qr-generator-page" id="qrGeneratorPage">
+        <button class="sign-in-button" onclick="openSignInPage()">Sign In</button>
+        
+        <h1 onclick="resetPage()">QR Code Generator</h1>
+        <p>Enter your URL to generate a QR code:</p>
+
+        <input type="text" id="qrData" placeholder="Enter your URL here" onkeypress="handleEnter(event)">
+        
+        <button onclick="generateQRCode()">Generate QR Code</button>
+        
+        <div id="qrcode"></div>
+    </div>
+
+    <div class="sign-in-page" id="signInPage">
+        <h2>Sign In</h2>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button onclick="submitSignIn()">Sign In</button>
+        <button onclick="goBack()">Back</button>
+    </div>
+
+    <div class="submitted-message" id="submittedMessage">Submitted</div>
+    
+    <div class="footer">
+        &copy; 2024 Jawad Tafish. All Rights Reserved. <strong>JAWAD TAFISH WEB</strong>
+    </div>
+
+    <script>
+        function resetPage() {
+            location.reload();
+        }
+
+        function handleEnter(event) {
+            if (event.key === "Enter") {
+                generateQRCode();
+            }
+        }
+
+        function generateQRCode() {
+            var data = document.getElementById("qrData").value;
+            if (!data) {
+                alert("Please enter a URL.");
+                return;
+            }
+            document.getElementById("qrcode").innerHTML = "";
+            new QRCode(document.getElementById("qrcode"), {
+                text: data,
+                width: 300,
+                height: 300,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        function openSignInPage() {
+            document.getElementById("qrGeneratorPage").style.display = "none";
+            document.getElementById("signInPage").style.display = "block";
+        }
+
+        function goBack() {
+            document.getElementById("signInPage").style.display = "none";
+            document.getElementById("qrGeneratorPage").style.display = "block";
+        }
+
+        function submitSignIn() {
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+
+            var submittedMessage = document.getElementById('submittedMessage');
+            submittedMessage.style.display = 'block';
+
+            setTimeout(function() {
+                submittedMessage.style.display = 'none';
+            }, 1500);
+        }
+
+        document.getElementById("qrGeneratorPage").style.display = "block";
+    </script>
+</body>
+</html>
